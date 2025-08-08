@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun --hot run tsx src/index.ts",
-    "start": "bun run tsx src/index.ts",
+    "dev": "bun --hot run tsx src/server.ts",
+    "start": "bun run tsx src/server.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
