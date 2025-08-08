@@ -1,8 +1,11 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
+import { config } from "../config/env";
+import { moderateWithHF } from "../services/moderation/huggingface.service";
+import { moderateWithOpenAI } from "../services/moderation/openai.service";
 
 const bodySchema = z.object({
-  text: z.string().min(1, "text is required")
+  text: z.string().min(1, "text is required"),
 });
 
 export async function moderateComment(req: Request, res: Response) {
@@ -13,10 +16,14 @@ export async function moderateComment(req: Request, res: Response) {
 
   const { text } = parsed.data;
 
-  const decision = {
-    allowed: true,
-    reasons: [] as string[]
-  };
+  try {
+    const decision = config.provider === "huggingface" ? await moderateWithHF(text) : await moderateWithOpenAI(text);
 
-  return res.json(decision);
+    // log lại decision + text để check
+    console.log("Moderation decision:", decision, "for text:", text);
+
+    return res.json(decision);
+  } catch (e: any) {
+    return res.status(500).json({ error: e.message ?? "server error" });
+  }
 }
