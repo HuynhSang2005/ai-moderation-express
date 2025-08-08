@@ -1,22 +1,19 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Container,
-  Title,
-  Stack,
-  Textarea,
-  Group,
-  Button,
-  Card,
-  Badge,
-  Text,
-} from "@mantine/core";
+import { Container, Title, Stack, Textarea, Group, Button, Card, Badge, Text, Loader } from "@mantine/core";
 import { moderateText, type ModerationResp } from "./libs/api";
+
+type HistoryItem = { text: string; allowed: boolean; reasons: string[] };
 
 export default function App() {
   const [text, setText] = useState("");
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+
   const { mutate, data, isPending, isError, error } = useMutation({
     mutationFn: (t: string) => moderateText(t),
+    onSuccess: (resp) => {
+      setHistory((prev) => [{ text, allowed: resp.allowed, reasons: resp.reasons }, ...prev]);
+    }
   });
 
   const onSubmit = (e: React.FormEvent) => {
@@ -26,13 +23,9 @@ export default function App() {
 
   const resp: ModerationResp | undefined = data;
 
-  const hasDebug = resp?.debug !== undefined && resp?.debug !== null;
-
   return (
     <Container size="sm" py="xl">
-      <Title order={2} mb="md">
-        AI Comment Moderation
-      </Title>
+      <Title order={2} mb="md">AI Comment Moderation</Title>
 
       <form onSubmit={onSubmit}>
         <Stack>
@@ -44,15 +37,15 @@ export default function App() {
             onChange={(e) => setText(e.currentTarget.value)}
           />
           <Group>
-            <Button type="submit" loading={isPending}>
-              Kiểm tra
-            </Button>
-            <Button variant="default" onClick={() => setText("")}>
-              Clear
-            </Button>
+            <Button type="submit" loading={isPending}>Kiểm tra</Button>
+            <Button variant="default" onClick={() => setText("")}>Clear</Button>
           </Group>
         </Stack>
       </form>
+
+      {isPending && (
+        <Group mt="md"><Loader size="sm" /> <Text>Đang kiểm tra...</Text></Group>
+      )}
 
       {isError && (
         <Card withBorder mt="lg">
@@ -70,23 +63,33 @@ export default function App() {
           </Group>
 
           <Group mt="sm">
-            {resp.reasons.length ? (
-              resp.reasons.map((r) => <Badge key={r}>{r}</Badge>)
-            ) : (
-              <Badge variant="light">clean</Badge>
-            )}
+            {resp.reasons.length
+              ? resp.reasons.map((r) => <Badge key={r}>{r}</Badge>)
+              : <Badge variant="light">clean</Badge>}
           </Group>
 
-          {hasDebug ? (
+          {Boolean(resp.debug) && (
             <>
-              <Text size="sm" c="dimmed" mt="sm">
-                Debug
-              </Text>
+              <Text size="sm" c="dimmed" mt="sm">Debug</Text>
               <pre style={{ whiteSpace: "pre-wrap" }}>
-                {JSON.stringify(resp!.debug, null, 2)}
+                {JSON.stringify(resp.debug, null, 2)}
               </pre>
             </>
-          ) : null}
+          )}
+        </Card>
+      )}
+
+      {history.length > 0 && (
+        <Card withBorder mt="lg">
+          <Text fw={600} mb="sm">Lịch sử</Text>
+          {history.map((h, i) => (
+            <Group key={i} justify="space-between" mb="xs">
+              <Text size="sm" style={{ maxWidth: "70%" }}>{h.text}</Text>
+              <Badge color={h.allowed ? "green" : "red"}>
+                {h.allowed ? "ALLOWED" : "BLOCKED"}
+              </Badge>
+            </Group>
+          ))}
         </Card>
       )}
     </Container>
