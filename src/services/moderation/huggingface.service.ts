@@ -1,36 +1,38 @@
+import { normalizeHFLabels } from "./reason-map";
 import { config } from "../../config/env";
+
 
 type ModerationDecision = { allowed: boolean; reasons: string[] };
 
-// Ví dụ dùng model "unitary/toxic-bert" (binary toxicity).
-export async function moderateWithHF(text: string): Promise<ModerationDecision> {
-  if (!config.hfKey) throw new Error("HF_API_KEY is missing");
 
-  const resp = await fetch(
-    "https://api-inference.huggingface.co/models/unitary/toxic-bert",
-    {
+export async function moderateWithHF(text: string): Promise<ModerationDecision> {
+  const resp = await fetch("https://api.openai.com/v1/moderations", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${config.hfKey}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ inputs: text })
-    }
-  );
+      body: JSON.stringify({
+        model: "omni-moderation-latest",
+        input: text
+      })
+    });
+  // data là mảng label-score
+  const data = await resp.json();
 
-  if (!resp.ok) {
-    const err = await resp.text();
-    throw new Error(`HF inference failed: ${err}`);
+  // HF trả kiểu: [[{label: 'toxic', score: 0.87}, {label:'neutral', score:0.13}]]
+  const arr = Array.isArray(data) ? data[0] : [];
+  const activeLabels: string[] = [];
+
+  for (const it of arr ?? []) {
+    // rule đơn giản: lấy các label có score > 0.5 (tùy model mà bạn chỉnh threshold)
+    if (typeof it?.label === "string" && typeof it?.score === "number" && it.score > 0.5) {
+      activeLabels.push(it.label);
+    }
   }
 
-  const data = await resp.json();
-  // data: [[{label: 'toxic', score: 0.87}, {label:'neutral', score:0.13}]]
-  const arr = Array.isArray(data) ? data[0] : [];
-  const toxic = arr?.find((x: any) => x.label.toLowerCase().includes("toxic"));
-  const isToxic = toxic && toxic.score > 0.5;
+  const reasons = normalizeHFLabels(activeLabels);
+  const allowed = reasons.length === 0; // nếu không có lý do vi phạm thì cho phép
 
-  return {
-    allowed: !isToxic,
-    reasons: isToxic ? ["toxic"] : []
-  };
+  return { allowed, reasons };
 }
