@@ -3,10 +3,23 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "bun --hot run tsx src/index.ts",
+    "start": "bun run tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.2.0",
+    "tsx": "^4.20.3"
   },
   "peerDependencies": {
-    "typescript": "^5"
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "zod": "^4.0.15"
   }
 }
