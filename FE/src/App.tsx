@@ -1,25 +1,15 @@
 import { useState } from "react";
+import { Container, Group, Loader, Text, Card } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Container,
-  Title,
-  Stack,
-  Textarea,
-  Group,
-  Button,
-  Card,
-  Badge,
-  Text,
-  Loader,
-} from "@mantine/core";
+import HeaderBar from "./components/HeaderBar";
+import TextModerationForm from "./components/TextModerationForm"
+import ModerationResult from "./components/ModerationResult";
+import HistoryList, { type HistoryItem } from "./components/HistoryList";
 import { moderateText, type ModerationResp } from "./libs/api";
-import { highlightText } from "./libs/highlight";
-
-type HistoryItem = { text: string; allowed: boolean; reasons: string[] };
 
 export default function App() {
-  const [text, setText] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [lastInput, setLastInput] = useState("");
 
   const { mutate, data, isPending, isError, error } = useMutation<
     ModerationResp,
@@ -27,55 +17,27 @@ export default function App() {
     string
   >({
     mutationFn: (t: string) => moderateText(t),
-    onSuccess: (resp) => {
-      setHistory((prev) => [
-        { text, allowed: resp.allowed, reasons: resp.reasons },
-        ...prev,
-      ]);
+    onSuccess: (resp, variables) => {
+      setLastInput(variables);
+      setHistory((prev) => [{ text: variables, allowed: resp.allowed, reasons: resp.reasons }, ...prev].slice(0, 10));
     },
   });
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (text.trim()) mutate(text);
-  };
+  const handleSubmit = (text: string) => mutate(text);
 
-  const resp = data;
+  const removeHistoryItem = (index: number) =>
+    setHistory((prev) => prev.filter((_, i) => i !== index));
 
   return (
     <Container size="sm" py="xl">
-      <Title order={2} mb="md">
-        AI Comment Moderation
-      </Title>
+      <HeaderBar />
 
-      <form onSubmit={onSubmit}>
-        <Stack>
-          <Textarea
-            placeholder="Nhập bình luận…"
-            autosize
-            minRows={4}
-            value={text}
-            onChange={(e) => setText(e.currentTarget.value)}
-          />
-          <Group>
-            <Button type="submit" loading={isPending}>
-              Kiểm tra
-            </Button>
-            <Button variant="default" onClick={() => setText("")}>
-              Clear
-            </Button>
-            {history.length > 0 && (
-              <Button
-                variant="subtle"
-                onClick={() => setHistory([])}
-                title="Xoá lịch sử"
-              >
-                Clear history
-              </Button>
-            )}
-          </Group>
-        </Stack>
-      </form>
+      <TextModerationForm
+        loading={isPending}
+        onSubmit={handleSubmit}
+        hasHistory={history.length > 0}
+        onClearHistory={() => setHistory([])}
+      />
 
       {isPending && (
         <Group mt="md">
@@ -89,56 +51,11 @@ export default function App() {
         </Card>
       )}
 
-      {resp && (
-        <Card withBorder mt="lg">
-          <Group justify="space-between">
-            <Text fw={600}>Kết quả</Text>
-            <Badge color={resp.allowed ? "green" : "red"}>
-              {resp.allowed ? "ALLOWED" : "BLOCKED"}
-            </Badge>
-          </Group>
-
-          {/* Highlight nội dung đã gửi dựa trên reasons */}
-          <Text mt="sm">{highlightText(text, resp.reasons)}</Text>
-
-          <Group mt="sm">
-            {resp.reasons.length ? (
-              resp.reasons.map((r) => <Badge key={r}>{r}</Badge>)
-            ) : (
-              <Badge variant="light">clean</Badge>
-            )}
-          </Group>
-
-          {Boolean(resp.debug) && (
-            <>
-              <Text size="sm" c="dimmed" mt="sm">
-                Debug
-              </Text>
-              <pre style={{ whiteSpace: "pre-wrap" }}>
-                {JSON.stringify(resp.debug, null, 2)}
-              </pre>
-            </>
-          )}
-        </Card>
+      {data && (
+        <ModerationResult originalText={lastInput} resp={data} showDebug />
       )}
 
-      {history.length > 0 && (
-        <Card withBorder mt="lg">
-          <Text fw={600} mb="sm">
-            Lịch sử
-          </Text>
-          {history.map((h, i) => (
-            <Group key={i} justify="space-between" mb="xs">
-              <Text size="sm" style={{ maxWidth: "70%" }}>
-                {h.text}
-              </Text>
-              <Badge color={h.allowed ? "green" : "red"}>
-                {h.allowed ? "ALLOWED" : "BLOCKED"}
-              </Badge>
-            </Group>
-          ))}
-        </Card>
-      )}
+      <HistoryList items={history} onRemove={removeHistoryItem} />
     </Container>
   );
 }
