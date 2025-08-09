@@ -153,7 +153,7 @@ Kiểm duyệt một đoạn văn bản.
 
 ```json
 {
-  "text": "thằng ngu lồn"
+  "text": "thằng ngu"
 }
 ```
 
