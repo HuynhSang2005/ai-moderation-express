@@ -8,4 +8,5 @@ export const config = {
   vnRulesStrict: String(process.env.VN_RULES_STRICT ?? "false") === "true",
   cacheTtlMs: Number(process.env.CACHE_TTL_MS ?? "0"),
   providerDebug: String(process.env.PROVIDER_DEBUG ?? "false") === "true",
+  openaiKey: process.env.OPENAI_API_KEY ?? ""
 };
