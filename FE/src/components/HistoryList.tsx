@@ -18,8 +18,13 @@ export default function HistoryList({ items, onRemove }: Props) {
       </Group>
 
       {items.map((h, i) => (
-        <Group key={i} justify="space-between" mb="xs" wrap="nowrap">
-          <Text size="sm" style={{ maxWidth: "70%" }} lineClamp={2} title={h.text}>
+        <Group key={i} justify="space-between" mb="xs" wrap="wrap">
+          <Text
+            size="sm"
+            style={{ flex: 1, minWidth: 220 }}
+            lineClamp={2}
+            title={h.text}
+          >
             {h.text}
           </Text>
           <Group gap="xs">
@@ -28,7 +33,11 @@ export default function HistoryList({ items, onRemove }: Props) {
             </Badge>
             {onRemove && (
               <Tooltip label="Xoá mục này">
-                <ActionIcon variant="subtle" onClick={() => onRemove(i)} aria-label="remove">
+                <ActionIcon
+                  variant="subtle"
+                  onClick={() => onRemove(i)}
+                  aria-label="remove"
+                >
                   <IconTrash size={16} />
                 </ActionIcon>
               </Tooltip>

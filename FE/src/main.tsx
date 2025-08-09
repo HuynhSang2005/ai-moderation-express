@@ -12,12 +12,13 @@ const theme = createTheme({
   headings: {
     fontFamily: 'Inter, sans-serif',
   },
+  defaultRadius: 'md',
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <MantineProvider theme={theme} defaultColorScheme="light">
+      <MantineProvider theme={theme} defaultColorScheme="auto">
         <App />
       </MantineProvider>
     </QueryClientProvider>

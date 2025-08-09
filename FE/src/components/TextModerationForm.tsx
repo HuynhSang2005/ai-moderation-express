@@ -35,15 +35,15 @@ export default function TextModerationForm({
           value={text}
           onChange={(e) => setText(e.currentTarget.value)}
         />
-        <Group>
-          <Button type="submit" loading={loading}>
+        <Group wrap="wrap" gap="sm">
+          <Button type="submit" loading={loading} size="sm">
             Kiểm tra
           </Button>
-          <Button variant="default" onClick={() => setText("")}>
+          <Button variant="default" onClick={() => setText("")} size="sm">
             Xoá
           </Button>
           {hasHistory && (
-            <Button variant="subtle" onClick={onClearHistory}>
+            <Button variant="subtle" onClick={onClearHistory} size="sm">
               Xoá lịch sử
             </Button>
           )}
