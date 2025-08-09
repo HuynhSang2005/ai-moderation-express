@@ -2,15 +2,15 @@ import { config } from "../../config/env";
 import { normalizeHFLabels } from "./reason-map";
 import { normalizeForModeration } from "../text-normalize";
 import { violatesVietnameseRules } from "./vn-rules";
+import type { ModerationDecision } from "../../types/huggingface";
 
 // Simple in-memory cache (optional)
 const cache = new Map<string, { data: any; at: number }>();
 
-type ModerationDecision = { allowed: boolean; reasons: string[]; debug?: any };
 
 export async function moderateWithHF(text: string): Promise<ModerationDecision> {
   if (!config.hfKey) throw new Error("HF_API_KEY is missing");
-  const endpoint = `https://api-inference.huggingface.co/models/${config.hfModel}`;
+const endpoint = `https://api-inference.huggingface.co/models/${config.hfModel}`;
 
   // CACHE
   const key = `${config.hfModel}|${text}`;
@@ -22,11 +22,18 @@ export async function moderateWithHF(text: string): Promise<ModerationDecision> 
   // Chuẩn hoá để model nhạy hơn (không gửi chuỗi đã bỏ dấu nếu bạn muốn giữ nguyên -> có thể gửi cả 2)
   const normalized = normalizeForModeration(text);
 
-  const resp = await fetch(`${endpoint}?wait_for_model=true`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${config.hfKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ inputs: normalized })
-  });
+  const resp = await fetch(endpoint, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${config.hfKey}`,
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+  body: JSON.stringify({
+    inputs: normalized,                 
+    options: { wait_for_model: true },  
+  }),
+});
 
   if (!resp.ok) {
     const err = await resp.text();
