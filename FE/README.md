@@ -20,12 +20,12 @@
 
 ## 🖼️ UI Preview (placeholder)
 
-1. **Home / Form nhập & kết quả**
-   `![UI - Home](./public/images/ui-home.png "UI - Home")`
+1. **Home / Form nhập & kết quả**  
+   ![UI - Home](./public/images/ui-home.png "UI - Home")
 
-2. **Trạng thái Bị chặn + highlight**
-   `![UI - Blocked](./public/images/ui-blocked.png "UI - Blocked")`
-
+2. **Trạng thái Bị chặn + highlight**  
+   ![UI - Blocked](./public/images/ui-blocked.png "UI - Blocked")
+   
 ## 📦 Cấu trúc thư mục
 
 ```
