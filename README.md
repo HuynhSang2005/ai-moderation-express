@@ -1,5 +1,10 @@
 <p align="center"> 
-  <img src="https://bun.sh/logo.svg" alt="Bun.js" width="80" style="margin-right:20px;"/> <img src="https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png" alt="Express" width="120" style="margin-right:20px;"/> <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React" width="80"/>
+  <img src="https://bun.sh/logo.svg" alt="Bun.js" width="80" style="margin-right:20px;"/>
+  &nbsp;
+  <img src="https://img.icons8.com/?size=100&id=kg46nzoJrmTR&format=png&color=000000" alt="Express" width="70"/>
+  &nbsp;
+  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React" width="80"/>
+  &nbsp;
   <img src="https://vitejs.dev/logo-with-shadow.png" width="70" />
   &nbsp;
 </p
