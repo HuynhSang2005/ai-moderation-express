@@ -152,3 +152,7 @@ npm run dev
 - Dashboard thống kê tỉ lệ duyệt/chặn.
 
 ---
+
+## 👨‍💻 Tác giả - Nguyễn Huỳnh Sang
+
+Pet project phục vụ mục đích học tập và tích hợp AI vào hệ thống kiểm duyệt nội dung.
