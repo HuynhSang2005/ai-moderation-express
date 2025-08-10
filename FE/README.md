@@ -136,4 +136,8 @@ type ModerationResp = {
 1. `npm run build` tạo `dist/` (SPA).
 2. Triển khai tĩnh (Vercel/Netlify/Nginx) – nhớ cấu hình **CORS** ở Backend (nếu FE và BE khác domain).
 3. Đặt `VITE_API_BASE` phù hợp môi trường production.
+
+## 👨‍💻 Tác giả - Nguyễn Huỳnh Sang 
+Pet project phục vụ mục đích học tập và tích hợp AI vào hệ thống kiểm duyệt nội dung.
+
 ---
