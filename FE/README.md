@@ -21,10 +21,14 @@
 ## 🖼️ UI Preview (placeholder)
 
 1. **Home / Form nhập & kết quả**  
-   ![UI - Home](./public/images/ui-home.png "UI - Home")
+   <div>
+    <img src="./public/images/ui-home.jpeg" width="100%" height="auto" alt="UI - Home"/>
+   </div>
 
 2. **Trạng thái Bị chặn + highlight**  
-   ![UI - Blocked](./public/images/ui-blocked.png "UI - Blocked")
+   <div>
+    <img src="./public/images/ui-blocked.jpeg" width="100%" height="auto" alt="UI - Blocked"/>
+   </div>
    
 ## 📦 Cấu trúc thư mục
 

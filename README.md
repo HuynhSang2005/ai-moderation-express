@@ -133,15 +133,13 @@ npm run dev
 
 1. **Form nhập bình luận & kết quả**
 
-   ```
-   ![UI - Home](./docs/ui-home.png "UI - Home")
-   ```
+  <div>
+    <img src="./FE/public/images/ui-home-darkmode.png" width="100%" height="auto" alt="UI - Home />
+  </div>
 
 2. **Highlight từ vi phạm**
 
-   ```
-   ![UI - Blocked](./docs/ui-blocked.png "UI - Blocked")
-   ```
+  <img src="./FE/public/images/ui-blocked-darkmode.png" width="100%" height="auto" alt="UI - Blocked"/>
 
 ---
 
