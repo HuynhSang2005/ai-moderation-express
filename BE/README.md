@@ -18,21 +18,22 @@ Dự án được thiết kế để dễ mở rộng, tối ưu cho tiếng Vi�
 
 ## 📂 Cấu trúc thư mục
 ```
-
 src/
-config/env.ts                # Load và parse biến môi trường
-server.ts                    # Khởi chạy Express server
-routes/moderation.routes.ts  # Định nghĩa route /comments/moderate
-controllers/                 # Xử lý request/response
-services/
-moderation/
-huggingface.service.ts   # Gọi HF API + fine-tune BE
-openai.service.ts        # Gọi OpenAI API
-reason-map.ts            # Map label → taxonomy chung
-vn-rules.ts              # Luật từ khóa tiếng Việt
-text-normalize.ts          # Hàm chuẩn hoá văn bản
-types/                       # TypeScript types & type guards
-.env.example                   # Mẫu cấu hình môi trường
+├── config/
+│   └── env.ts                 # Load và parse biến môi trường
+├── controllers/              # Xử lý request/response
+├── routes/
+│   └── moderation.routes.ts  # Định nghĩa route /comments/moderate
+├── server.ts                 # Khởi chạy Express server
+├── services/
+│   └── moderation/
+│       ├── huggingface.service.ts  # Gọi HF API + fine-tune BE
+│       ├── openai.service.ts       # Gọi OpenAI API
+│       ├── reason-map.ts           # Map label → taxonomy chung
+│       ├── vn-rules.ts             # Luật từ khóa tiếng Việt
+│       └── text-normalize.ts       # Hàm chuẩn hoá văn bản
+├── types/                   # TypeScript types & type guards
+.env.example                 # Mẫu cấu hình môi trường
 
 ````
 
