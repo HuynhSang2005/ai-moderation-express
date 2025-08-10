@@ -133,14 +133,14 @@ npm run dev
 
 1. **Form nhập bình luận & kết quả**
 
-  <div>
+  <div  align="center">
     <img src="./FE/public/images/ui-home-darkmode.png" width="100%" height="auto" alt="UI - Home />
   </div>
 
 2. **Highlight từ vi phạm**
-
+  <div align="center">
   <img src="./FE/public/images/ui-blocked-darkmode.png" width="100%" height="auto" alt="UI - Blocked"/>
-
+  </div>
 ---
 
 ## 🚀 Hướng phát triển
